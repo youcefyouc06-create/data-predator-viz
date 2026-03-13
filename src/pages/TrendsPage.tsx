@@ -10,15 +10,23 @@ const trendsData = [
   { keyword: "RSS reader", trend: "DEAD", change: "-52%", multiplier: "0.3x", interest: 12, data: [40, 35, 30, 28, 25, 22, 20, 18, 16, 14, 13, 12] },
 ];
 
-const statusColors: Record<string, { text: string; line: string }> = {
-  EXPLODING: { text: "text-success", line: "#22c55e" },
-  GROWING:   { text: "text-emerald-300", line: "#6ee7b7" },
-  STABLE:    { text: "text-warning", line: "#f59e0b" },
-  DECLINING: { text: "text-orange-400", line: "#f97316" },
-  DEAD:      { text: "text-destructive", line: "#ef4444" },
+const trendStyles: Record<string, { text: string; bg: string; glow?: boolean }> = {
+  EXPLODING: { text: "text-primary", bg: "bg-primary/10", glow: true },
+  GROWING: { text: "text-emerald-400", bg: "bg-emerald-400/10" },
+  STABLE: { text: "text-warning", bg: "bg-warning/10" },
+  DECLINING: { text: "text-orange-400", bg: "bg-orange-400/10" },
+  DEAD: { text: "text-destructive", bg: "bg-destructive/10" },
 };
 
-const Sparkline = ({ data, color }: { data: number[]; color: string }) => {
+const chartColors: Record<string, string> = {
+  EXPLODING: "hsl(142, 72%, 50%)",
+  GROWING: "hsl(160, 60%, 50%)",
+  STABLE: "hsl(45, 93%, 47%)",
+  DECLINING: "hsl(30, 80%, 55%)",
+  DEAD: "hsl(0, 84%, 60%)",
+};
+
+const MiniChart = ({ data, color }: { data: number[]; color: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -26,7 +34,7 @@ const Sparkline = ({ data, color }: { data: number[]; color: string }) => {
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = 120 * dpr;
+    canvas.width = 140 * dpr;
     canvas.height = 40 * dpr;
     ctx.scale(dpr, dpr);
 
@@ -34,21 +42,20 @@ const Sparkline = ({ data, color }: { data: number[]; color: string }) => {
     const min = Math.min(...data);
     const range = max - min || 1;
 
-    // Area fill
+    // Fill gradient
     ctx.beginPath();
     data.forEach((v, i) => {
-      const x = (i / (data.length - 1)) * 120;
+      const x = (i / (data.length - 1)) * 140;
       const y = 40 - ((v - min) / range) * 34 - 3;
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
-    ctx.lineTo(120, 40);
+    ctx.lineTo(140, 40);
     ctx.lineTo(0, 40);
     ctx.closePath();
-
-    // Parse color for fill
     const fillGrad = ctx.createLinearGradient(0, 0, 0, 40);
-    fillGrad.addColorStop(0, color + "26"); // ~15% opacity
-    fillGrad.addColorStop(1, color + "00");
+    const m = color.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+    fillGrad.addColorStop(0, m ? `hsla(${m[1]}, ${m[2]}%, ${m[3]}%, 0.15)` : "rgba(255,255,255,0.05)");
+    fillGrad.addColorStop(1, "transparent");
     ctx.fillStyle = fillGrad;
     ctx.fill();
 
@@ -58,50 +65,48 @@ const Sparkline = ({ data, color }: { data: number[]; color: string }) => {
     ctx.lineJoin = "round";
     ctx.beginPath();
     data.forEach((v, i) => {
-      const x = (i / (data.length - 1)) * 120;
+      const x = (i / (data.length - 1)) * 140;
       const y = 40 - ((v - min) / range) * 34 - 3;
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
     ctx.stroke();
+
+    // Glow
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 8;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
   }, [data, color]);
 
-  return <canvas ref={canvasRef} className="w-[120px] h-[40px]" />;
+  return <canvas ref={canvasRef} className="w-[140px] h-[40px]" />;
 };
 
 const TrendsPage = () => {
-  const statusCounts = ["EXPLODING", "GROWING", "STABLE", "DECLINING", "DEAD"].map((s) => ({
-    status: s,
-    count: trendsData.filter((t) => t.trend === s).length,
-    ...statusColors[s],
-  }));
-
   return (
     <div>
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-[32px] font-semibold tracking-tight-custom">Market Trends</h1>
-        <p className="text-muted-foreground mt-1 text-sm">Google Trends · 12-month analysis window</p>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+        <h1 className="text-4xl font-black tracking-brutal">Market Trends</h1>
+        <p className="text-muted-foreground mt-1 text-sm font-mono">Google Trends · 12-month analysis window</p>
       </motion.div>
 
-      {/* Status Pills */}
-      <div className="grid grid-cols-5 gap-3 mb-6">
-        {statusCounts.map((s, i) => (
-          <motion.div
-            key={s.status}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.03 }}
-            className="surface-card p-4 text-center"
-          >
-            <p className={`text-[32px] font-semibold font-mono ${s.text}`}>{s.count}</p>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground mt-1">{s.status}</p>
-          </motion.div>
-        ))}
+      {/* Overview */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-5">
+        {["EXPLODING", "GROWING", "STABLE", "DECLINING", "DEAD"].map((tier) => {
+          const count = trendsData.filter((t) => t.trend === tier).length;
+          const s = trendStyles[tier];
+          return (
+            <motion.div key={tier} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              className={`bento-card rounded-xl p-4 text-center ${s.glow ? "neon-glow" : ""}`}>
+              <p className={`text-3xl font-black font-mono tracking-brutal ${s.text}`}>{count}</p>
+              <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground mt-1">{tier}</p>
+            </motion.div>
+          );
+        })}
       </div>
 
-      {/* Data Table */}
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="surface-card overflow-hidden">
-        {/* Header */}
-        <div className="grid grid-cols-[1fr_120px_100px_80px_80px_80px] gap-4 px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+      {/* Trends Table */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bento-card rounded-xl overflow-hidden">
+        <div className="grid grid-cols-[1fr_140px_100px_80px_80px_80px] gap-4 px-6 py-3 border-b border-border text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
           <span>Keyword</span>
           <span>12mo Trend</span>
           <span>Status</span>
@@ -109,28 +114,25 @@ const TrendsPage = () => {
           <span className="text-right">Interest</span>
           <span className="text-right">Multiplier</span>
         </div>
-
-        {/* Rows */}
         {trendsData.map((t, i) => {
-          const sc = statusColors[t.trend];
+          const s = trendStyles[t.trend];
           return (
             <motion.div
               key={t.keyword}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.12 + i * 0.04 }}
-              className="grid grid-cols-[1fr_120px_100px_80px_80px_80px] gap-4 px-6 py-4 items-center hover:bg-surface-2/50 transition-colors"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.05 }}
+              className="grid grid-cols-[1fr_140px_100px_80px_80px_80px] gap-4 px-6 py-4 border-b border-border/50 last:border-0 items-center hover:bg-secondary/15 transition-colors"
             >
-              <span className="text-[14px] font-medium font-mono">{t.keyword}</span>
-              <Sparkline data={t.data} color={sc.line} />
-              <span className={`text-[11px] font-semibold uppercase px-2 py-1 rounded-[5px] w-fit font-mono flex items-center gap-1 ${sc.text}`} style={{ background: sc.line + "14" }}>
+              <span className="text-sm font-bold font-mono">{t.keyword}</span>
+              <MiniChart data={t.data} color={chartColors[t.trend]} />
+              <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-md ${s.bg} ${s.text} w-fit font-mono flex items-center gap-1`}>
                 {t.trend === "EXPLODING" && <Flame className="w-3 h-3" />}
                 {t.trend}
               </span>
-              <span className={`text-[14px] font-mono text-right font-semibold ${sc.text}`}>{t.change}</span>
-              <span className="text-[14px] font-mono text-right text-foreground/70">{t.interest}</span>
-              <span className="text-[14px] font-mono text-right text-muted-foreground">{t.multiplier}</span>
+              <span className={`text-sm font-mono text-right font-bold ${s.text}`}>{t.change}</span>
+              <span className="text-sm font-mono text-right">{t.interest}</span>
+              <span className="text-sm font-mono text-right text-muted-foreground">{t.multiplier}</span>
             </motion.div>
           );
         })}

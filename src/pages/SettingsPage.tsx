@@ -21,7 +21,7 @@ const activeModels = [
 ];
 
 const statusIcons: Record<string, React.ReactNode> = {
-  verified: <CheckCircle className="w-3.5 h-3.5 text-success" />,
+  verified: <CheckCircle className="w-3.5 h-3.5 text-primary" />,
   error: <XCircle className="w-3.5 h-3.5 text-destructive" />,
   pending: <AlertTriangle className="w-3.5 h-3.5 text-warning" />,
 };
@@ -29,33 +29,38 @@ const statusIcons: Record<string, React.ReactNode> = {
 const SettingsPage = () => {
   return (
     <div className="max-w-4xl">
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-[32px] font-semibold tracking-tight-custom">Settings</h1>
-        <p className="text-muted-foreground mt-1 text-sm">AI models · Account · Configuration</p>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+        <h1 className="text-4xl font-black tracking-brutal">Settings</h1>
+        <p className="text-muted-foreground mt-1 text-sm font-mono">AI models · Account · Configuration</p>
       </motion.div>
 
       {/* Active Models */}
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="surface-card p-5 mb-4">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bento-card rounded-xl p-5 mb-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
             Active Agents ({activeModels.length}/6)
           </h3>
-          <Button size="sm" className="h-7 text-[11px]">
+          <Button variant="neon" size="sm" className="h-7 text-[10px]">
             <Plus className="w-3 h-3" /> Add Model
           </Button>
         </div>
 
         <div className="space-y-1.5">
           {activeModels.map((model, i) => (
-            <motion.div key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 + i * 0.04 }}
-              className="flex items-center justify-between p-3.5 rounded-lg bg-surface-1 group hover:bg-surface-2 transition-colors" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.05 }}
+              className="flex items-center justify-between p-3.5 rounded-lg bg-surface-1 border border-border/50 group hover:border-border transition-colors"
+            >
               <div className="flex items-center gap-3">
-                <span className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center text-[11px] font-semibold text-primary font-mono" style={{ border: "1px solid rgba(99,102,241,0.2)" }}>
+                <span className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary font-mono border border-primary/20">
                   P{model.priority}
                 </span>
                 <div>
-                  <p className="text-[13px] font-medium">{model.provider} <span className="text-muted-foreground font-mono text-[11px]">/ {model.model}</span></p>
-                  <p className="text-[11px] text-muted-foreground font-mono">{model.key}</p>
+                  <p className="text-xs font-bold">{model.provider} <span className="text-muted-foreground font-mono text-[10px]">/ {model.model}</span></p>
+                  <p className="text-[10px] text-muted-foreground font-mono">{model.key}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
@@ -70,16 +75,22 @@ const SettingsPage = () => {
       </motion.div>
 
       {/* Available Providers */}
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="surface-card p-5">
-        <h3 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground mb-4">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bento-card rounded-xl p-5">
+        <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-4">
           Available Providers (9)
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
           {providers.map((p, i) => (
-            <motion.div key={p.name} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.18 + i * 0.03 }}
-              className="p-3.5 rounded-lg bg-surface-1 hover:bg-surface-2 transition-all cursor-pointer" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
-              <p className={`text-[13px] font-semibold ${p.color}`}>{p.name}</p>
-              <p className="text-[11px] text-muted-foreground mt-1 font-mono leading-relaxed">
+            <motion.div
+              key={p.name}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 + i * 0.03 }}
+              whileHover={{ scale: 1.02 }}
+              className="p-3.5 rounded-lg bg-surface-1 border border-border/50 hover:border-primary/20 transition-all cursor-pointer"
+            >
+              <p className={`text-xs font-bold ${p.color}`}>{p.name}</p>
+              <p className="text-[10px] text-muted-foreground mt-1 font-mono leading-relaxed">
                 {p.models.join(" · ")}
               </p>
             </motion.div>

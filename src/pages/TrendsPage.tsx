@@ -53,7 +53,8 @@ const MiniChart = ({ data, color }: { data: number[]; color: string }) => {
     ctx.lineTo(0, 40);
     ctx.closePath();
     const fillGrad = ctx.createLinearGradient(0, 0, 0, 40);
-    fillGrad.addColorStop(0, color.replace(")", " / 0.15)").replace("hsl", "hsla"));
+    const m = color.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
+    fillGrad.addColorStop(0, m ? `hsla(${m[1]}, ${m[2]}%, ${m[3]}%, 0.15)` : "rgba(255,255,255,0.05)");
     fillGrad.addColorStop(1, "transparent");
     ctx.fillStyle = fillGrad;
     ctx.fill();

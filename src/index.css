@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,23 +6,23 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
+    --background: 0 0% 4%;
     --foreground: 0 0% 95%;
 
-    --card: 0 0% 5%;
+    --card: 0 0% 6%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 5%;
+    --popover: 0 0% 6%;
     --popover-foreground: 0 0% 95%;
 
     --primary: 142 72% 50%;
     --primary-foreground: 0 0% 0%;
 
-    --secondary: 0 0% 10%;
+    --secondary: 0 0% 9%;
     --secondary-foreground: 0 0% 85%;
 
     --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 55%;
+    --muted-foreground: 0 0% 50%;
 
     --accent: 142 72% 50%;
     --accent-foreground: 0 0% 0%;
@@ -30,31 +30,44 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 14%;
-    --input: 0 0% 14%;
+    --border: 0 0% 11%;
+    --input: 0 0% 11%;
     --ring: 142 72% 50%;
 
     --radius: 0.75rem;
 
-    /* Custom tokens */
+    /* Neon system */
     --neon: 142 72% 50%;
     --neon-glow: 0 0 20px hsl(142 72% 50% / 0.4), 0 0 60px hsl(142 72% 50% / 0.1);
     --neon-glow-strong: 0 0 30px hsl(142 72% 50% / 0.6), 0 0 80px hsl(142 72% 50% / 0.2);
-    --glass-bg: hsla(0, 0%, 100%, 0.03);
-    --glass-border: hsla(0, 0%, 100%, 0.08);
-    --glass-hover: hsla(0, 0%, 100%, 0.06);
+    --neon-glow-intense: 0 0 40px hsl(142 72% 50% / 0.7), 0 0 100px hsl(142 72% 50% / 0.3), 0 0 150px hsl(142 72% 50% / 0.1);
+
+    /* Glass system */
+    --glass-bg: hsla(0, 0%, 100%, 0.02);
+    --glass-border: hsla(0, 0%, 100%, 0.06);
+    --glass-hover: hsla(0, 0%, 100%, 0.05);
+    --glass-active: hsla(142, 72%, 50%, 0.03);
+
+    /* Depth surfaces */
+    --surface-0: 0 0% 2%;
     --surface-1: 0 0% 4%;
     --surface-2: 0 0% 7%;
     --surface-3: 0 0% 10%;
+    --surface-4: 0 0% 13%;
 
+    /* Sidebar */
     --sidebar-background: 0 0% 3%;
-    --sidebar-foreground: 0 0% 85%;
+    --sidebar-foreground: 0 0% 75%;
     --sidebar-primary: 142 72% 50%;
     --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent: 0 0% 8%;
     --sidebar-accent-foreground: 0 0% 85%;
-    --sidebar-border: 0 0% 14%;
+    --sidebar-border: 0 0% 10%;
     --sidebar-ring: 142 72% 50%;
+
+    /* Warning / Amber */
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 0%;
   }
 }
 
@@ -64,7 +77,8 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-feature-settings: "ss01", "ss02", "cv01";
   }
 
@@ -72,18 +86,42 @@
     background: hsl(var(--neon) / 0.3);
     color: hsl(var(--foreground));
   }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.3);
+  }
 }
 
 @layer components {
   .glass-card {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
   }
 
   .glass-card:hover {
     background: var(--glass-hover);
+    border-color: hsla(0, 0%, 100%, 0.09);
+  }
+
+  .glass-card-active {
+    background: var(--glass-active);
+    border: 1px solid hsl(var(--neon) / 0.15);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
   }
 
   .neon-glow {
@@ -94,9 +132,18 @@
     box-shadow: var(--neon-glow-strong);
   }
 
+  .neon-glow-intense {
+    box-shadow: var(--neon-glow-intense);
+  }
+
   .neon-text {
     color: hsl(var(--neon));
-    text-shadow: 0 0 20px hsl(var(--neon) / 0.5);
+    text-shadow: 0 0 20px hsl(var(--neon) / 0.5), 0 0 40px hsl(var(--neon) / 0.2);
+  }
+
+  .neon-text-strong {
+    color: hsl(var(--neon));
+    text-shadow: 0 0 30px hsl(var(--neon) / 0.7), 0 0 60px hsl(var(--neon) / 0.3), 0 0 100px hsl(var(--neon) / 0.1);
   }
 
   .neon-border {
@@ -104,14 +151,92 @@
   }
 
   .terminal-bg {
-    background: hsl(var(--surface-1));
+    background: hsl(var(--surface-0));
+  }
+
+  .terminal-card {
+    background: hsl(var(--surface-0));
+    border: 1px solid hsl(var(--border));
+    font-family: 'JetBrains Mono', monospace;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .terminal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--neon) / 0.3), transparent);
   }
 
   .grid-pattern {
     background-image: 
-      linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
+      linear-gradient(hsl(var(--border) / 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.2) 1px, transparent 1px);
     background-size: 60px 60px;
+  }
+
+  /* Scan line overlay */
+  .scan-line-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scan-line-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, hsl(var(--neon) / 0.4), transparent);
+    animation: scan-line 4s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Badge system */
+  .badge-glow {
+    position: relative;
+  }
+
+  .badge-glow::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    opacity: 0.5;
+    filter: blur(4px);
+    z-index: -1;
+  }
+
+  /* Bento card with tilt-ready depth */
+  .bento-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bento-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), hsl(var(--neon) / 0.04), transparent 40%);
+    pointer-events: none;
+  }
+
+  .bento-card:hover {
+    background: var(--glass-hover);
+    border-color: hsl(var(--neon) / 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px -12px hsl(var(--neon) / 0.15);
   }
 
   .meteor {
@@ -122,11 +247,29 @@
     border-radius: 999px;
     opacity: 0;
   }
+
+  /* Status dot with pulse ring */
+  .status-live {
+    position: relative;
+  }
+
+  .status-live::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px solid hsl(var(--neon) / 0.4);
+    animation: pulse-ring 2s ease-out infinite;
+  }
 }
 
 @layer utilities {
   .tracking-tight-custom {
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
+  }
+
+  .tracking-brutal {
+    letter-spacing: -0.06em;
   }
 
   .text-gradient-neon {
@@ -135,4 +278,20 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  .text-gradient-steel {
+    background: linear-gradient(180deg, hsl(0 0% 95%), hsl(0 0% 55%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .font-display {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
 }

@@ -1,90 +1,74 @@
 import { motion } from "framer-motion";
-import { useEffect, useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
-const terminalLines = [
-  { type: "system", text: "[SCAN] Initializing Reddit API connection..." },
-  { type: "success", text: "[OK] Connected to r/SaaS, r/startups, r/Entrepreneur" },
-  { type: "data", text: "[DATA] Scraping 2,847 posts from last 30 days..." },
-  { type: "system", text: "[NLP] Running sentiment analysis on extracted corpus" },
-  { type: "warning", text: "[WARN] Rate limit approaching — throttling requests" },
-  { type: "data", text: "[DATA] Extracted 1,247 unique pain points" },
-  { type: "success", text: "[OK] ICP profile generated: B2B SaaS founders, $10-50k MRR" },
-  { type: "system", text: "[AI] Deploying multi-brain debate engine..." },
-  { type: "data", text: "[DATA] Competition analysis: 12 direct competitors found" },
-  { type: "success", text: '[OK] Validation score: 8.7/10 — "Strong market signal"' },
-  { type: "system", text: "[SCAN] Cross-referencing with HackerNews Algolia API..." },
-  { type: "data", text: "[DATA] Google Trends momentum: +34% over 6 months" },
-  { type: "warning", text: "[WARN] DeepSeek API latency spike — switching to Gemini" },
-  { type: "success", text: "[OK] Report generated — 47 actionable insights ready" },
+const logLines = [
+  { type: "system", text: "[SYS] Initializing multi-brain engine..." },
+  { type: "success", text: "[OK] Gemini 2.0 Flash connected (120ms)" },
+  { type: "success", text: "[OK] Llama 3.3 70B connected (85ms)" },
+  { type: "data", text: "[SCRAPE] r/SaaS — 347 posts indexed" },
+  { type: "data", text: "[SCRAPE] r/startups — 289 posts indexed" },
+  { type: "system", text: "[NLP] Pain extraction pipeline active" },
+  { type: "data", text: '[SIGNAL] WTP detected: "$50/mo" (r/SaaS)' },
+  { type: "warning", text: "[WARN] DeepSeek V3 — connection timeout" },
+  { type: "success", text: "[OK] Fallback to GPT-4o (340ms)" },
+  { type: "data", text: '[TREND] "AI code review" → EXPLODING (+67%)' },
+  { type: "system", text: "[DEBATE] 3 models entering consensus round" },
+  { type: "success", text: "[VERDICT] BUILD IT — 82% confidence" },
 ];
 
-const colorMap: Record<string, string> = {
+const typeColors: Record<string, string> = {
   system: "text-muted-foreground",
   success: "text-primary",
-  data: "text-foreground",
+  data: "text-foreground/70",
   warning: "text-amber-400",
 };
 
 const TerminalFeed = () => {
-  const [lines, setLines] = useState<typeof terminalLines>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [lines, setLines] = useState<typeof logLines>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let idx = 0;
+    let i = 0;
     const interval = setInterval(() => {
-      setLines((prev) => {
-        const newLines = [...prev, terminalLines[idx % terminalLines.length]];
-        if (newLines.length > 12) newLines.shift();
-        return newLines;
-      });
-      idx++;
+      setLines((prev) => [...prev, logLines[i % logLines.length]]);
+      i++;
+      if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }, 1800);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }
-  }, [lines]);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.6 }}
-      className="glass-card rounded-xl overflow-hidden col-span-2"
+      className="terminal-card rounded-xl p-4"
     >
-      {/* Terminal header */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-secondary/30">
-        <div className="flex gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-destructive/80" />
-          <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-          <span className="w-3 h-3 rounded-full bg-primary/80" />
+      <div className="flex items-center justify-between mb-3 px-1">
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400/60" />
+            <span className="w-2.5 h-2.5 rounded-full bg-primary/60" />
+          </div>
+          <span className="text-[10px] font-mono text-muted-foreground ml-2">system.log</span>
         </div>
-        <span className="text-xs font-mono text-muted-foreground ml-2">
-          redditpulse — extraction_engine
-        </span>
+        <span className="w-1.5 h-3 bg-primary animate-pulse-neon" />
       </div>
 
-      {/* Terminal body */}
-      <div
-        ref={containerRef}
-        className="p-4 font-mono text-xs leading-relaxed h-56 overflow-y-auto terminal-bg"
-      >
+      <div ref={scrollRef} className="h-44 overflow-y-auto space-y-1 text-[11px] font-mono leading-relaxed">
         {lines.map((line, i) => (
           <motion.div
-            key={`${i}-${line.text}`}
+            key={i}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.2 }}
-            className={`${colorMap[line.type]} mb-1`}
+            className={`${typeColors[line.type]} py-0.5`}
           >
-            <span className="text-muted-foreground select-none">$ </span>
             {line.text}
           </motion.div>
         ))}
-        <span className="inline-block w-2 h-4 bg-primary animate-pulse-neon ml-1" />
+        {lines.length === 0 && <span className="text-muted-foreground">Awaiting input...</span>}
       </div>
     </motion.div>
   );

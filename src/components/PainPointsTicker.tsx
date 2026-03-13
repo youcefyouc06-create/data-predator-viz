@@ -1,39 +1,31 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 const painPoints = [
-  "Users frustrated with slow onboarding flow",
-  "No bulk export feature — requested 47 times",
-  "Pricing page confusion causing 23% drop-off",
-  "Mobile app crashes on Android 13+",
-  "API rate limiting too aggressive for enterprise",
-  "Dashboard loading time exceeds 8 seconds",
-  "Missing dark mode — top requested feature",
-  "Customer support response time > 48hrs",
-  "Integration with Slack broken since v2.4",
-  "Search functionality returns irrelevant results",
+  { text: "Manual validation takes too long", score: 847, source: "r/SaaS" },
+  { text: "Can't find real market demand signals", score: 623, source: "r/startups" },
+  { text: "Competitor research is overwhelming", score: 512, source: "r/Entrepreneur" },
+  { text: "No way to validate willingness to pay", score: 489, source: "r/indiehackers" },
+  { text: "Building features nobody actually wants", score: 445, source: "r/SaaS" },
+  { text: "Wasting months on unvalidated ideas", score: 398, source: "r/startups" },
+  { text: "Reddit search is completely useless", score: 367, source: "r/webdev" },
+  { text: "Need real-time market intelligence", score: 334, source: "r/smallbusiness" },
 ];
 
 const PainPointsTicker = () => {
-  const [count, setCount] = useState(1247);
-  const [currentPoints, setCurrentPoints] = useState(painPoints.slice(0, 4));
+  const [count, setCount] = useState(12847);
+  const [visibleItems, setVisibleItems] = useState(painPoints.slice(0, 5));
   const [key, setKey] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCount((prev) => prev + Math.floor(Math.random() * 3) + 1);
-    }, 800);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentPoints((prev) => {
-        const nextIdx = (painPoints.indexOf(prev[prev.length - 1]) + 1) % painPoints.length;
-        return [...prev.slice(1), painPoints[nextIdx]];
+      setCount((c) => c + Math.floor(Math.random() * 5) + 1);
+      setVisibleItems((prev) => {
+        const nextIndex = (painPoints.indexOf(prev[prev.length - 1]) + 1) % painPoints.length;
+        return [...prev.slice(1), painPoints[nextIndex]];
       });
       setKey((k) => k + 1);
-    }, 2500);
+    }, 2200);
     return () => clearInterval(interval);
   }, []);
 
@@ -42,41 +34,38 @@ const PainPointsTicker = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.4 }}
-      className="glass-card rounded-xl p-6 col-span-1 row-span-2"
+      className="bento-card rounded-xl p-6"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+        <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em]">
           Pain Points Extracted
         </h3>
-      </div>
-
-      <div className="mb-6">
-        <motion.p
+        <motion.span
           key={count}
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          className="text-5xl font-black tracking-tight-custom neon-text font-mono"
+          initial={{ y: 5, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="text-xs font-mono neon-text font-bold"
         >
           {count.toLocaleString()}
-        </motion.p>
-        <p className="text-xs text-muted-foreground mt-1">and counting...</p>
+        </motion.span>
       </div>
 
       <div className="space-y-2 overflow-hidden">
         <AnimatePresence mode="popLayout">
-          {currentPoints.map((point, i) => (
+          {visibleItems.map((point, i) => (
             <motion.div
-              key={`${key}-${i}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, delay: i * 0.05 }}
-              className="flex items-start gap-2 p-2 rounded-md bg-secondary/50"
+              key={`${point.text}-${key}-${i}`}
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex items-center justify-between py-2 border-b border-border/50 last:border-0"
             >
-              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-              <span className="text-xs text-secondary-foreground leading-relaxed">
-                {point}
-              </span>
+              <p className="text-xs text-foreground/80 truncate pr-3 flex-1">{point.text}</p>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <span className="text-[10px] font-mono text-muted-foreground">{point.source}</span>
+                <span className="text-[10px] font-mono text-primary font-bold">↑{point.score}</span>
+              </div>
             </motion.div>
           ))}
         </AnimatePresence>

@@ -8,7 +8,7 @@ const SentimentChart = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
-    
+
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * dpr;
@@ -31,7 +31,7 @@ const SentimentChart = () => {
       ctx.clearRect(0, 0, w, h);
 
       // Subtle grid
-      ctx.strokeStyle = "hsla(0, 0%, 100%, 0.02)";
+      ctx.strokeStyle = "rgba(255,255,255,0.02)";
       ctx.lineWidth = 1;
       for (let y = 0; y < h; y += h / 6) {
         ctx.beginPath();
@@ -40,11 +40,11 @@ const SentimentChart = () => {
         ctx.stroke();
       }
 
-      // Main line
+      // Main line — indigo
       const gradient = ctx.createLinearGradient(0, 0, w, 0);
-      gradient.addColorStop(0, "hsl(142, 72%, 45%)");
-      gradient.addColorStop(0.5, "hsl(142, 72%, 55%)");
-      gradient.addColorStop(1, "hsl(142, 72%, 40%)");
+      gradient.addColorStop(0, "#6366f1");
+      gradient.addColorStop(0.5, "#818cf8");
+      gradient.addColorStop(1, "#6366f1");
 
       ctx.strokeStyle = gradient;
       ctx.lineWidth = 2;
@@ -62,20 +62,14 @@ const SentimentChart = () => {
       }
       ctx.stroke();
 
-      // Glow
-      ctx.shadowColor = "hsl(142, 72%, 50%)";
-      ctx.shadowBlur = 20;
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
       // Fill
       ctx.lineTo(w, h);
       ctx.lineTo(0, h);
       ctx.closePath();
       const fillGradient = ctx.createLinearGradient(0, 0, 0, h);
-      fillGradient.addColorStop(0, "hsla(142, 72%, 50%, 0.12)");
-      fillGradient.addColorStop(0.5, "hsla(142, 72%, 50%, 0.03)");
-      fillGradient.addColorStop(1, "hsla(142, 72%, 50%, 0)");
+      fillGradient.addColorStop(0, "rgba(99,102,241,0.12)");
+      fillGradient.addColorStop(0.5, "rgba(99,102,241,0.03)");
+      fillGradient.addColorStop(1, "rgba(99,102,241,0)");
       ctx.fillStyle = fillGradient;
       ctx.fill();
     };
@@ -94,24 +88,24 @@ const SentimentChart = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
-      className="bento-card rounded-xl p-6 col-span-2 row-span-2 scan-line-overlay"
+      transition={{ delay: 0.1 }}
+      className="surface-card p-6 col-span-2 row-span-2"
     >
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em] mb-1">
+          <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em] mb-1">
             Sentiment Analysis
           </h3>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-black tracking-brutal neon-text-strong">72.4%</span>
-            <span className="text-xs text-muted-foreground font-mono">POSITIVE</span>
+            <span className="text-[32px] font-semibold font-mono tracking-tight">72.4%</span>
+            <span className="text-[13px] text-muted-foreground font-mono">POSITIVE</span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-neon status-live" />
-          <span className="text-[10px] font-mono text-primary tracking-wider">LIVE</span>
+        <div className="flex items-center gap-1.5">
+          <span className="w-[6px] h-[6px] rounded-full bg-success animate-pulse-dot" />
+          <span className="text-[11px] font-mono text-muted-foreground">LIVE</span>
         </div>
       </div>
       <div className="relative w-full h-48 rounded-lg overflow-hidden">

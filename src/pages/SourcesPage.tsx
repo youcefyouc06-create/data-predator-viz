@@ -22,33 +22,33 @@ const SourcesPage = () => {
 
   return (
     <div>
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-4xl font-black tracking-brutal">Data Sources</h1>
-        <p className="text-muted-foreground mt-1 text-sm font-mono">Platforms scraped · AI models deployed</p>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+        <h1 className="text-[32px] font-semibold tracking-tight-custom">Data Sources</h1>
+        <p className="text-muted-foreground mt-1 text-sm">Platforms scraped · AI models deployed</p>
       </motion.div>
 
       {/* Platforms */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bento-card rounded-xl p-5 mb-4">
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="surface-card p-5 mb-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground flex items-center gap-2">
+          <h3 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground flex items-center gap-2">
             <Globe className="w-3.5 h-3.5" /> Platforms ({dataSources.length})
           </h3>
-          <p className="text-[10px] font-mono text-primary font-bold">{totalPosts.toLocaleString()} total posts</p>
+          <p className="text-[11px] font-mono text-primary font-semibold">{totalPosts.toLocaleString()} total posts</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {dataSources.map((s, i) => (
-            <motion.div key={s.platform} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15 + i * 0.05 }}
-              className="p-4 rounded-lg bg-surface-1 border border-border/50 flex items-center justify-between hover:border-border transition-colors">
+            <motion.div key={s.platform} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.08 + i * 0.04 }}
+              className="p-4 rounded-lg bg-surface-1 flex items-center justify-between" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
               <div className="flex items-center gap-3">
                 <span className="text-xl">{s.icon}</span>
                 <div>
-                  <p className="text-sm font-bold">{s.platform}</p>
-                  <p className="text-[10px] text-muted-foreground font-mono">{s.method}</p>
+                  <p className="text-[14px] font-medium">{s.platform}</p>
+                  <p className="text-[11px] text-muted-foreground font-mono">{s.method}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-black font-mono tracking-brutal">{s.posts.toLocaleString()}</p>
-                <p className="text-[9px] text-muted-foreground uppercase tracking-wider">posts</p>
+                <p className="text-[24px] font-semibold font-mono">{s.posts.toLocaleString()}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-[0.08em]">posts</p>
               </div>
             </motion.div>
           ))}
@@ -56,13 +56,13 @@ const SourcesPage = () => {
       </motion.div>
 
       {/* AI Models */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bento-card rounded-xl overflow-hidden">
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="surface-card overflow-hidden">
         <div className="p-5 pb-0">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground flex items-center gap-2 mb-4">
+          <h3 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground flex items-center gap-2 mb-4">
             <Cpu className="w-3.5 h-3.5" /> AI Models ({totalCalls} calls)
           </h3>
         </div>
-        <div className="grid grid-cols-[1fr_80px_80px_80px_60px] gap-4 px-5 py-3 border-b border-border text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+        <div className="grid grid-cols-[1fr_80px_80px_80px_60px] gap-4 px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <span>Model</span>
           <span className="text-right">Calls</span>
           <span className="text-right">Tokens</span>
@@ -70,17 +70,18 @@ const SourcesPage = () => {
           <span className="text-right">Status</span>
         </div>
         {modelsUsed.map((m, i) => (
-          <motion.div key={m.name} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.04 }}
-            className="grid grid-cols-[1fr_80px_80px_80px_60px] gap-4 px-5 py-3.5 border-b border-border/50 last:border-0 items-center hover:bg-secondary/10 transition-colors">
+          <motion.div key={m.name} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.18 + i * 0.03 }}
+            className="grid grid-cols-[1fr_80px_80px_80px_60px] gap-4 px-5 py-3.5 items-center hover:bg-surface-2/50 transition-colors"
+            style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
             <div>
-              <p className="text-xs font-bold">{m.name}</p>
-              <p className="text-[10px] text-muted-foreground font-mono">{m.provider}</p>
+              <p className="text-[13px] font-medium">{m.name}</p>
+              <p className="text-[11px] text-muted-foreground font-mono">{m.provider}</p>
             </div>
-            <p className="text-xs font-mono text-right font-bold">{m.calls}</p>
-            <p className="text-xs font-mono text-right">{m.tokens}</p>
-            <p className="text-xs font-mono text-right neon-text font-bold">{m.cost}</p>
+            <p className="text-[13px] font-mono text-right font-semibold">{m.calls}</p>
+            <p className="text-[13px] font-mono text-right">{m.tokens}</p>
+            <p className="text-[13px] font-mono text-right text-primary font-semibold">{m.cost}</p>
             <div className="flex justify-end">
-              <span className={`w-2 h-2 rounded-full ${m.status === "active" ? "bg-primary animate-pulse-neon status-live" : m.status === "error" ? "bg-destructive" : "bg-muted-foreground/40"}`} />
+              <span className={`w-[6px] h-[6px] rounded-full ${m.status === "active" ? "bg-success animate-pulse-dot" : m.status === "error" ? "bg-destructive" : "bg-muted-foreground/40"}`} />
             </div>
           </motion.div>
         ))}

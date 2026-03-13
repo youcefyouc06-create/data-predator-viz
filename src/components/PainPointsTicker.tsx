@@ -31,21 +31,16 @@ const PainPointsTicker = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.4 }}
-      className="bento-card rounded-xl p-6"
+      transition={{ delay: 0.15 }}
+      className="surface-card p-6"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em]">
+        <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]">
           Pain Points Extracted
         </h3>
-        <motion.span
-          key={count}
-          initial={{ y: 5, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-xs font-mono neon-text font-bold"
-        >
+        <motion.span key={count} initial={{ y: 5, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-[13px] font-mono text-primary font-semibold">
           {count.toLocaleString()}
         </motion.span>
       </div>
@@ -59,12 +54,13 @@ const PainPointsTicker = () => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="flex items-center justify-between py-2 border-b border-border/50 last:border-0"
+              className="flex items-center justify-between py-2"
+              style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
             >
-              <p className="text-xs text-foreground/80 truncate pr-3 flex-1">{point.text}</p>
+              <p className="text-[13px] text-foreground/80 truncate pr-3 flex-1">{point.text}</p>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-[10px] font-mono text-muted-foreground">{point.source}</span>
-                <span className="text-[10px] font-mono text-primary font-bold">↑{point.score}</span>
+                <span className="text-[11px] font-mono text-muted-foreground">{point.source}</span>
+                <span className="text-[11px] font-mono text-primary font-semibold">↑{point.score}</span>
               </div>
             </motion.div>
           ))}

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Zap, ArrowRight, Activity, Search, TrendingUp, Shield } from "lucide-react";
+import { Zap, ArrowRight, Activity, Search, TrendingUp, Shield, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MeteorShower from "@/components/MeteorShower";
 
@@ -17,24 +17,24 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <MeteorShower />
-      <div className="grid-pattern fixed inset-0 pointer-events-none z-0 opacity-40" />
+      <div className="grid-pattern fixed inset-0 pointer-events-none z-0 opacity-30" />
 
       {/* Nav */}
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl"
+        className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/70 backdrop-blur-xl"
       >
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 neon-border border flex items-center justify-center neon-glow">
-              <Zap className="w-4 h-4 text-primary" />
+        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-md bg-primary/10 border border-primary/30 flex items-center justify-center neon-glow">
+              <Zap className="w-3.5 h-3.5 text-primary" />
             </div>
-            <span className="text-lg font-bold tracking-tight-custom">
-              Reddit<span className="neon-text">Pulse</span>
+            <span className="text-sm font-bold tracking-brutal">
+              REDDIT<span className="neon-text">PULSE</span>
             </span>
           </div>
-          <Button variant="neon" size="sm" onClick={() => navigate("/dashboard")}>
+          <Button variant="neon" size="sm" onClick={() => navigate("/dashboard")} className="h-8 text-xs">
             Open Dashboard <ArrowRight className="w-3 h-3" />
           </Button>
         </div>
@@ -48,35 +48,37 @@ const Index = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 neon-border border mb-8">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse-neon" />
-            <span className="text-xs font-mono text-primary">DATA EXTRACTION WEAPON</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/8 border border-primary/20 mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-neon status-live" />
+            <span className="text-[10px] font-mono text-primary tracking-wider uppercase">Data Extraction Weapon</span>
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-black tracking-tight-custom leading-[0.9] mb-6">
-            Extract. Validate.
+          <h1 className="text-7xl md:text-9xl font-black tracking-brutal leading-[0.85] mb-6">
+            <span className="text-gradient-steel">Extract.</span>
             <br />
-            <span className="text-gradient-neon">Dominate.</span>
+            <span className="text-gradient-steel">Validate.</span>
+            <br />
+            <span className="neon-text-strong">Dominate.</span>
           </h1>
 
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg md:text-xl leading-relaxed mb-10">
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base leading-relaxed mb-10 font-mono">
             Real-time Reddit intelligence. Multi-brain AI debate engine.
-            Turn raw community conversations into validated market weapons.
+            Turn raw community pain into validated market weapons.
           </p>
 
-          <div className="flex items-center justify-center gap-4">
-            <Button variant="neon" size="lg" onClick={() => navigate("/dashboard/validate")} className="text-base px-8">
-              <Zap className="w-5 h-5" />
+          <div className="flex items-center justify-center gap-3">
+            <Button variant="neon" size="lg" onClick={() => navigate("/dashboard/validate")} className="text-sm px-8 h-11">
+              <Zap className="w-4 h-4" />
               Start Validating
             </Button>
-            <Button variant="ghost" size="lg" onClick={() => navigate("/dashboard")} className="text-base text-muted-foreground">
-              View Dashboard <ArrowRight className="w-4 h-4" />
+            <Button variant="ghost" size="lg" onClick={() => navigate("/dashboard")} className="text-sm text-muted-foreground h-11">
+              View Dashboard <ArrowRight className="w-3.5 h-3.5" />
             </Button>
           </div>
         </motion.div>
 
         {/* Features */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-16">
           {features.map(({ icon: Icon, title, desc }, i) => (
             <motion.div
               key={title}
@@ -84,13 +86,13 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + i * 0.1 }}
               whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
-              className="glass-card rounded-xl p-6 cursor-default"
+              className="bento-card rounded-xl p-5 cursor-default"
             >
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Icon className="w-5 h-5 text-primary" />
+              <div className="w-8 h-8 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center mb-3">
+                <Icon className="w-4 h-4 text-primary" />
               </div>
-              <h3 className="text-sm font-bold mb-2">{title}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
+              <h3 className="text-xs font-bold mb-1.5">{title}</h3>
+              <p className="text-[10px] text-muted-foreground leading-relaxed font-mono">{desc}</p>
             </motion.div>
           ))}
         </div>
@@ -100,17 +102,17 @@ const Index = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4"
+          className="grid grid-cols-2 md:grid-cols-4 gap-3"
         >
           {[
             { label: "AI Providers", value: "9" },
-            { label: "Platforms Scraped", value: "4" },
+            { label: "Platforms", value: "4" },
             { label: "Validation Passes", value: "3+1" },
-            { label: "Max Active Models", value: "6" },
+            { label: "Max Models", value: "6" },
           ].map((s) => (
-            <div key={s.label} className="glass-card rounded-xl p-6 text-center">
-              <p className="text-3xl font-black font-mono neon-text">{s.value}</p>
-              <p className="text-xs text-muted-foreground mt-1 uppercase tracking-wider">{s.label}</p>
+            <div key={s.label} className="bento-card rounded-xl p-5 text-center">
+              <p className="text-4xl font-black font-mono tracking-brutal neon-text">{s.value}</p>
+              <p className="text-[9px] text-muted-foreground mt-2 uppercase tracking-[0.15em] font-mono">{s.label}</p>
             </div>
           ))}
         </motion.div>

@@ -18,8 +18,7 @@ const SentimentChart = () => {
     const w = rect.width;
     const h = rect.height;
 
-    // Generate data points
-    const points = 60;
+    const points = 80;
     const data: number[] = [];
     let val = 50;
     for (let i = 0; i < points; i++) {
@@ -31,10 +30,10 @@ const SentimentChart = () => {
     const draw = (offset: number) => {
       ctx.clearRect(0, 0, w, h);
 
-      // Grid lines
-      ctx.strokeStyle = "hsla(0, 0%, 100%, 0.04)";
+      // Subtle grid
+      ctx.strokeStyle = "hsla(0, 0%, 100%, 0.02)";
       ctx.lineWidth = 1;
-      for (let y = 0; y < h; y += h / 5) {
+      for (let y = 0; y < h; y += h / 6) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(w, y);
@@ -43,12 +42,12 @@ const SentimentChart = () => {
 
       // Main line
       const gradient = ctx.createLinearGradient(0, 0, w, 0);
-      gradient.addColorStop(0, "hsl(142, 72%, 50%)");
-      gradient.addColorStop(0.5, "hsl(142, 72%, 60%)");
-      gradient.addColorStop(1, "hsl(142, 72%, 45%)");
+      gradient.addColorStop(0, "hsl(142, 72%, 45%)");
+      gradient.addColorStop(0.5, "hsl(142, 72%, 55%)");
+      gradient.addColorStop(1, "hsl(142, 72%, 40%)");
 
       ctx.strokeStyle = gradient;
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2;
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
       ctx.beginPath();
@@ -63,18 +62,19 @@ const SentimentChart = () => {
       }
       ctx.stroke();
 
-      // Glow effect
+      // Glow
       ctx.shadowColor = "hsl(142, 72%, 50%)";
-      ctx.shadowBlur = 15;
+      ctx.shadowBlur = 20;
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      // Fill area
+      // Fill
       ctx.lineTo(w, h);
       ctx.lineTo(0, h);
       ctx.closePath();
       const fillGradient = ctx.createLinearGradient(0, 0, 0, h);
-      fillGradient.addColorStop(0, "hsla(142, 72%, 50%, 0.15)");
+      fillGradient.addColorStop(0, "hsla(142, 72%, 50%, 0.12)");
+      fillGradient.addColorStop(0.5, "hsla(142, 72%, 50%, 0.03)");
       fillGradient.addColorStop(1, "hsla(142, 72%, 50%, 0)");
       ctx.fillStyle = fillGradient;
       ctx.fill();
@@ -83,7 +83,7 @@ const SentimentChart = () => {
     let frame = 0;
     let animId: number;
     const animate = () => {
-      frame += 0.02;
+      frame += 0.015;
       draw(frame);
       animId = requestAnimationFrame(animate);
     };
@@ -97,20 +97,21 @@ const SentimentChart = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="glass-card rounded-xl p-6 col-span-2 row-span-2"
+      className="bento-card rounded-xl p-6 col-span-2 row-span-2 scan-line-overlay"
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+          <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.15em] mb-1">
             Sentiment Analysis
           </h3>
-          <p className="text-2xl font-bold tracking-tight-custom mt-1">
-            <span className="neon-text">72.4%</span> Positive
-          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="text-4xl font-black tracking-brutal neon-text-strong">72.4%</span>
+            <span className="text-xs text-muted-foreground font-mono">POSITIVE</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="inline-block w-2 h-2 rounded-full bg-primary animate-pulse-neon" />
-          LIVE
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-neon status-live" />
+          <span className="text-[10px] font-mono text-primary tracking-wider">LIVE</span>
         </div>
       </div>
       <div className="relative w-full h-48 rounded-lg overflow-hidden">

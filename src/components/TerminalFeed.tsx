@@ -18,9 +18,9 @@ const logLines = [
 
 const typeColors: Record<string, string> = {
   system: "text-muted-foreground",
-  success: "text-primary",
+  success: "text-success",
   data: "text-foreground/70",
-  warning: "text-amber-400",
+  warning: "text-warning",
 };
 
 const TerminalFeed = () => {
@@ -39,30 +39,30 @@ const TerminalFeed = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.6 }}
-      className="terminal-card rounded-xl p-4"
+      transition={{ delay: 0.25 }}
+      className="terminal-card p-4"
     >
       <div className="flex items-center justify-between mb-3 px-1">
         <div className="flex items-center gap-2">
           <div className="flex gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400/60" />
-            <span className="w-2.5 h-2.5 rounded-full bg-primary/60" />
+            <span className="w-2.5 h-2.5 rounded-full" style={{ background: "rgba(239,68,68,0.5)" }} />
+            <span className="w-2.5 h-2.5 rounded-full" style={{ background: "rgba(245,158,11,0.5)" }} />
+            <span className="w-2.5 h-2.5 rounded-full" style={{ background: "rgba(34,197,94,0.5)" }} />
           </div>
-          <span className="text-[10px] font-mono text-muted-foreground ml-2">system.log</span>
+          <span className="text-[11px] font-mono text-muted-foreground ml-2">system.log</span>
         </div>
-        <span className="w-1.5 h-3 bg-primary animate-pulse-neon" />
+        <span className="w-1.5 h-4 bg-primary/50 animate-pulse" />
       </div>
 
       <div ref={scrollRef} className="h-44 overflow-y-auto space-y-1 text-[11px] font-mono leading-relaxed">
         {lines.map((line, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, x: -10 }}
+            initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.15 }}
             className={`${typeColors[line.type]} py-0.5`}
           >
             {line.text}

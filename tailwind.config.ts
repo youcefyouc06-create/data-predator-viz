@@ -8,15 +8,13 @@ export default {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+      screens: { "2xl": "1400px" },
     },
     extend: {
       fontFamily: {
-        sans: ["Space Grotesk", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
-        display: ["Space Grotesk", "system-ui", "sans-serif"],
+        sans: ["IBM Plex Sans", "system-ui", "sans-serif"],
+        mono: ["IBM Plex Mono", "monospace"],
+        display: ["Syne", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -24,11 +22,6 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        neon: "hsl(var(--neon))",
-        warning: {
-          DEFAULT: "hsl(var(--warning))",
-          foreground: "hsl(var(--warning-foreground))",
-        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -57,12 +50,19 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        build: "hsl(var(--build))",
+        risky: "hsl(var(--risky))",
+        dont: "hsl(var(--dont))",
+        teal: "hsl(var(--teal))",
         surface: {
           0: "hsl(var(--surface-0))",
           1: "hsl(var(--surface-1))",
           2: "hsl(var(--surface-2))",
           3: "hsl(var(--surface-3))",
-          4: "hsl(var(--surface-4))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -89,55 +89,20 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "meteor-fall": {
-          "0%": { transform: "translateY(-100px) translateX(0)", opacity: "1" },
-          "100%": { transform: "translateY(800px) translateX(200px)", opacity: "0" },
-        },
-        "pulse-neon": {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.5" },
-        },
-        "ticker-up": {
-          "0%": { transform: "translateY(100%)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" },
-        },
-        "scan-line": {
-          "0%": { transform: "translateY(-100%)" },
-          "100%": { transform: "translateY(4000%)" },
-        },
         shimmer: {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
-        },
-        "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 20px hsl(142 72% 50% / 0.3)" },
-          "50%": { boxShadow: "0 0 40px hsl(142 72% 50% / 0.6), 0 0 80px hsl(142 72% 50% / 0.2)" },
         },
         "terminal-blink": {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0" },
         },
-        "data-stream": {
-          "0%": { transform: "translateY(0)", opacity: "1" },
-          "100%": { transform: "translateY(-20px)", opacity: "0" },
-        },
-        "border-glow": {
-          "0%, 100%": { borderColor: "hsl(142 72% 50% / 0.2)" },
-          "50%": { borderColor: "hsl(142 72% 50% / 0.5)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "meteor-fall": "meteor-fall 3s linear infinite",
-        "pulse-neon": "pulse-neon 2s ease-in-out infinite",
-        "ticker-up": "ticker-up 0.4s ease-out",
-        "scan-line": "scan-line 4s linear infinite",
-        shimmer: "shimmer 2s linear infinite",
-        "glow-pulse": "glow-pulse 3s ease-in-out infinite",
+        shimmer: "shimmer 1.5s linear infinite",
         "terminal-blink": "terminal-blink 1s step-end infinite",
-        "data-stream": "data-stream 0.5s ease-out",
-        "border-glow": "border-glow 2s ease-in-out infinite",
       },
     },
   },

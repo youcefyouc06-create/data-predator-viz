@@ -1,185 +1,182 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Zap, Activity, Search, Settings, TrendingUp, DollarSign,
-  Swords, Database, FileText, Bookmark, Clock, Eye, Compass,
-  ChevronLeft, ChevronRight, Radio, Wifi,
-} from "lucide-react";
+import { Zap, Compass, TrendingUp, Search, Settings, Wifi } from "lucide-react";
 import { useState, useEffect } from "react";
+import ThreeBackground from "./ThreeBackground";
 
-const navSections = [
-  {
-    label: "Core",
-    items: [
-      { to: "/dashboard", icon: Activity, label: "Command Center", end: true },
-      { to: "/dashboard/validate", icon: Zap, label: "Validate" },
-      { to: "/dashboard/explore", icon: Compass, label: "Explore" },
-      { to: "/dashboard/scans", icon: Search, label: "Scans" },
-    ],
-  },
-  {
-    label: "Intelligence",
-    items: [
-      { to: "/dashboard/trends", icon: TrendingUp, label: "Trends" },
-      { to: "/dashboard/wtp", icon: DollarSign, label: "WTP Detection" },
-      { to: "/dashboard/competitors", icon: Swords, label: "Competitors" },
-      { to: "/dashboard/sources", icon: Database, label: "Sources" },
-    ],
-  },
-  {
-    label: "Personal",
-    items: [
-      { to: "/dashboard/reports", icon: FileText, label: "Reports" },
-      { to: "/dashboard/saved", icon: Bookmark, label: "Saved" },
-      { to: "/dashboard/digest", icon: Clock, label: "Digest" },
-      { to: "/dashboard/watchlist", icon: Eye, label: "Watchlist" },
-    ],
-  },
-  {
-    label: "System",
-    items: [
-      { to: "/dashboard/settings", icon: Settings, label: "Settings" },
-    ],
-  },
+const dockItems = [
+  { to: "/dashboard/validate", icon: Zap, label: "Validate" },
+  { to: "/dashboard/explore", icon: Compass, label: "Explore" },
+  { to: "/dashboard/trends", icon: TrendingUp, label: "Trends" },
+  { to: "/dashboard/scans", icon: Search, label: "Scans" },
+];
+
+const dockRight = [
+  { to: "/dashboard/settings", icon: Settings, label: "Settings" },
 ];
 
 const DashboardLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [scanCount, setScanCount] = useState(2847);
+  const [postCount, setPostCount] = useState(2960);
+  const [clock, setClock] = useState("");
+  const location = useLocation();
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setScanCount((c) => c + Math.floor(Math.random() * 3));
-    }, 3000);
+      if (Math.random() > 0.6) setPostCount((c) => c + Math.floor(Math.random() * 3));
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const tick = () => setClock(new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }));
+    tick();
+    const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Sidebar */}
-      <motion.aside
-        animate={{ width: collapsed ? 64 : 240 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className="fixed top-0 left-0 h-full bg-surface-0 z-50 flex flex-col overflow-hidden border-r border-border"
+    <div className="min-h-screen bg-background relative">
+      {/* Three.js background */}
+      <ThreeBackground />
+
+      {/* Noise overlay */}
+      <div className="noise-overlay" />
+
+      {/* Atmospheric blobs */}
+      <div
+        className="fixed pointer-events-none rounded-full"
+        style={{
+          top: -200, left: -150, width: 700, height: 700,
+          filter: "blur(140px)", background: "hsla(16, 100%, 50%, 0.07)",
+          animation: "drift 18s ease-in-out infinite alternate", zIndex: 0,
+        }}
+      />
+      <div
+        className="fixed pointer-events-none rounded-full"
+        style={{
+          bottom: -250, right: -100, width: 600, height: 600,
+          filter: "blur(120px)", background: "hsla(16, 70%, 50%, 0.05)",
+          animation: "drift 24s ease-in-out infinite alternate-reverse", zIndex: 0,
+        }}
+      />
+
+      {/* Top Status Bar */}
+      <header
+        className="sticky top-0 z-50 h-11 flex items-center justify-between px-6"
+        style={{
+          background: "hsla(0,0%,4%,0.7)",
+          borderBottom: "1px solid hsl(0 0% 100% / 0.07)",
+          backdropFilter: "blur(20px)",
+        }}
       >
-        {/* Logo */}
-        <div className="h-14 flex items-center px-4 border-b border-border gap-2.5 flex-shrink-0">
-          <div className="w-7 h-7 rounded-md bg-primary/10 border border-primary/30 flex items-center justify-center neon-glow flex-shrink-0">
-            <Zap className="w-3.5 h-3.5 text-primary" />
-          </div>
-          {!collapsed && (
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-sm font-bold tracking-brutal whitespace-nowrap"
-            >
-              REDDIT<span className="neon-text">PULSE</span>
-            </motion.span>
-          )}
-        </div>
+        <div className="flex items-center gap-4">
+          {/* Wordmark */}
+          <span className="font-mono text-[13px] font-semibold tracking-wider">
+            <span className="text-muted-foreground">⬡</span>{" "}
+            <span className="text-foreground">REDDIT</span>
+            <span className="text-primary">PULSE</span>
+          </span>
 
-        {/* Nav */}
-        <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-5">
-          {navSections.map((section) => (
-            <div key={section.label}>
-              {!collapsed && (
-                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-1.5 px-2.5">
-                  {section.label}
-                </p>
-              )}
-              <div className="space-y-0.5">
-                {section.items.map(({ to, icon: Icon, label, ...rest }) => (
-                  <NavLink
-                    key={to}
-                    to={to}
-                    end={"end" in rest}
-                    className={({ isActive }) =>
-                      `flex items-center gap-2.5 px-2.5 py-2 rounded-md text-xs font-medium transition-all duration-200 group relative ${
-                        isActive
-                          ? "bg-primary/8 text-primary"
-                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/40"
-                      }`
-                    }
-                  >
-                    {({ isActive }) => (
-                      <>
-                        {isActive && (
-                          <motion.div
-                            layoutId="nav-indicator"
-                            className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full bg-primary"
-                            transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
-                          />
-                        )}
-                        <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                        {!collapsed && <span className="whitespace-nowrap">{label}</span>}
-                      </>
-                    )}
-                  </NavLink>
-                ))}
-              </div>
-            </div>
-          ))}
-        </nav>
+          <div className="h-3 w-px bg-border" />
 
-        {/* Status + Collapse */}
-        <div className="border-t border-border">
-          {!collapsed && (
-            <div className="px-3 py-2.5 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-neon status-live" />
-              <span className="text-[10px] font-mono text-muted-foreground">
-                {scanCount.toLocaleString()} indexed
-              </span>
-            </div>
-          )}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="w-full h-10 border-t border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors hover:bg-secondary/30"
+          {/* Live pill */}
+          <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full"
+            style={{ background: "hsla(134,61%,55%,0.08)", border: "1px solid hsla(134,61%,55%,0.2)" }}
           >
-            {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
-          </button>
-        </div>
-      </motion.aside>
+            <span className="w-[5px] h-[5px] rounded-full bg-build status-live" style={{ animation: "pulse-green 2s ease infinite" }} />
+            <span className="text-[10px] font-mono font-medium text-build">LIVE</span>
+          </div>
 
-      {/* Main content */}
-      <motion.main
-        animate={{ marginLeft: collapsed ? 64 : 240 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className="flex-1 min-h-screen"
-      >
-        {/* Top status bar */}
-        <div className="sticky top-0 z-40 h-10 border-b border-border bg-surface-0/80 backdrop-blur-xl flex items-center px-6 justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5">
-              <Radio className="w-3 h-3 text-primary animate-pulse-neon" />
-              <span className="text-[10px] font-mono text-primary uppercase tracking-wider">Live</span>
-            </div>
-            <div className="h-3 w-px bg-border" />
-            <span className="text-[10px] font-mono text-muted-foreground">
-              {scanCount.toLocaleString()} posts · 34 subreddits · 4 platforms
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <Wifi className="w-3 h-3 text-primary" />
-              <span className="text-[10px] font-mono text-muted-foreground">3 models active</span>
-            </div>
-            <div className="h-3 w-px bg-border" />
-            <span className="text-[10px] font-mono text-muted-foreground">
-              {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-            </span>
-          </div>
+          <div className="h-3 w-px bg-border" />
+
+          <span className="text-[10px] font-mono text-muted-foreground">
+            {postCount.toLocaleString()} posts · 34 subreddits · 4 platforms
+          </span>
         </div>
 
-        {/* Grid pattern background */}
-        <div className="grid-pattern fixed inset-0 pointer-events-none z-0 opacity-15" />
+        <div className="flex items-center gap-3">
+          {/* Model dots */}
+          <div className="flex items-center gap-1.5">
+            <div className="w-[7px] h-[7px] rounded-full bg-primary" style={{ boxShadow: "0 0 6px hsla(16,100%,50%,0.25)" }} />
+            <div className="w-[7px] h-[7px] rounded-full" style={{ background: "#ff6534" }} />
+            <div className="w-[7px] h-[7px] rounded-full" style={{ background: "hsla(16,100%,50%,0.5)" }} />
+          </div>
+          <div className="h-3 w-px bg-border" />
+          <span className="text-[10px] font-mono text-muted-foreground">{clock}</span>
+        </div>
+      </header>
 
-        {/* Page content */}
-        <div className="relative z-10 p-6 lg:p-8">
+      {/* Page Content */}
+      <main className="relative z-10 p-6 lg:p-8 pb-28">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 10, scale: 0.99 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        >
           <Outlet />
-        </div>
-      </motion.main>
+        </motion.div>
+      </main>
+
+      {/* Floating Dock */}
+      <nav
+        className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-1"
+        style={{
+          background: "hsla(0,0%,4%,0.85)",
+          border: "1px solid hsl(0 0% 100% / 0.1)",
+          borderRadius: 20,
+          padding: "8px 12px",
+          backdropFilter: "blur(40px) saturate(200%)",
+          boxShadow: "0 0 0 1px hsl(0 0% 100% / 0.05), 0 24px 64px rgba(0,0,0,0.7), 0 0 40px hsla(16,100%,50%,0.05)",
+        }}
+      >
+        {dockItems.map((item) => (
+          <DockItem key={item.to} {...item} />
+        ))}
+
+        {/* Separator */}
+        <div className="w-px h-8 mx-1.5" style={{ background: "hsl(0 0% 100% / 0.08)" }} />
+
+        {dockRight.map((item) => (
+          <DockItem key={item.to} {...item} />
+        ))}
+      </nav>
     </div>
   );
 };
+
+const DockItem = ({ to, icon: Icon, label }: { to: string; icon: React.ComponentType<any>; label: string }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      `relative flex flex-col items-center gap-[3px] px-4 py-2 rounded-xl min-w-[60px] transition-all duration-150 text-[10px] tracking-wider ${
+        isActive
+          ? "text-primary"
+          : "text-muted-foreground hover:text-foreground"
+      }`
+    }
+    style={({ isActive }) =>
+      isActive
+        ? {
+            background: "hsl(16 100% 50% / 0.12)",
+            border: "1px solid hsl(16 100% 50% / 0.2)",
+          }
+        : { border: "1px solid transparent" }
+    }
+  >
+    {({ isActive }) => (
+      <>
+        <Icon className="w-[18px] h-[18px]" />
+        <span className="font-medium">{label}</span>
+        {isActive && (
+          <span
+            className="absolute bottom-1 w-1 h-1 rounded-full bg-primary"
+            style={{ boxShadow: "0 0 6px hsl(16 100% 50%)" }}
+          />
+        )}
+      </>
+    )}
+  </NavLink>
+);
 
 export default DashboardLayout;

@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Zap, ArrowRight, Activity, Search, TrendingUp, Shield, Terminal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import MeteorShower from "@/components/MeteorShower";
+import { Zap, ArrowRight, Activity, Search, TrendingUp, Shield } from "lucide-react";
+import ThreeBackground from "@/components/ThreeBackground";
 
 const features = [
   { icon: Search, title: "Multi-Platform Scraping", desc: "Reddit, HackerNews, ProductHunt, IndieHackers — all at once" },
@@ -16,27 +15,37 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      <MeteorShower />
-      <div className="grid-pattern fixed inset-0 pointer-events-none z-0 opacity-30" />
+      <ThreeBackground />
+      <div className="noise-overlay" />
+
+      {/* Atmospheric blobs */}
+      <div className="fixed pointer-events-none rounded-full"
+        style={{ top: -200, left: -150, width: 700, height: 700, filter: "blur(140px)", background: "hsla(16,100%,50%,0.07)", animation: "drift 18s ease-in-out infinite alternate" }}
+      />
+      <div className="fixed pointer-events-none rounded-full"
+        style={{ bottom: -250, right: -100, width: 600, height: 600, filter: "blur(120px)", background: "hsla(16,70%,50%,0.05)", animation: "drift 24s ease-in-out infinite alternate-reverse" }}
+      />
 
       {/* Nav */}
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/70 backdrop-blur-xl"
+        className="fixed top-0 left-0 right-0 z-50"
+        style={{ borderBottom: "1px solid hsl(var(--border))", background: "hsla(0,0%,4%,0.7)", backdropFilter: "blur(20px)" }}
       >
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-md bg-primary/10 border border-primary/30 flex items-center justify-center neon-glow">
-              <Zap className="w-3.5 h-3.5 text-primary" />
-            </div>
-            <span className="text-sm font-bold tracking-brutal">
-              REDDIT<span className="neon-text">PULSE</span>
-            </span>
-          </div>
-          <Button variant="neon" size="sm" onClick={() => navigate("/dashboard")} className="h-8 text-xs">
+          <span className="font-mono text-[13px] font-semibold tracking-wider">
+            <span className="text-muted-foreground">⬡</span>{" "}
+            <span className="text-foreground">REDDIT</span>
+            <span className="text-primary">PULSE</span>
+          </span>
+          <button
+            onClick={() => navigate("/dashboard/validate")}
+            className="inline-flex items-center gap-2 px-4 h-8 rounded-lg text-xs font-semibold text-primary-foreground transition-all"
+            style={{ background: "hsl(var(--primary))", boxShadow: "0 0 24px hsla(16,100%,50%,0.3)" }}
+          >
             Open Dashboard <ArrowRight className="w-3 h-3" />
-          </Button>
+          </button>
         </div>
       </motion.nav>
 
@@ -48,17 +57,19 @@ const Index = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/8 border border-primary/20 mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-neon status-live" />
-            <span className="text-[10px] font-mono text-primary tracking-wider uppercase">Data Extraction Weapon</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-8"
+            style={{ background: "hsl(var(--orange-dim))", border: "1px solid hsl(16 100% 50% / 0.2)" }}
+          >
+            <span className="w-[5px] h-[5px] rounded-full bg-build status-live" style={{ animation: "pulse-green 2s ease infinite" }} />
+            <span className="text-[10px] font-mono text-primary tracking-wider uppercase">Intelligence Terminal</span>
           </div>
 
-          <h1 className="text-7xl md:text-9xl font-black tracking-brutal leading-[0.85] mb-6">
+          <h1 className="font-display text-7xl md:text-9xl font-extrabold tracking-tight-custom leading-[0.85] mb-6">
             <span className="text-gradient-steel">Extract.</span>
             <br />
             <span className="text-gradient-steel">Validate.</span>
             <br />
-            <span className="neon-text-strong">Dominate.</span>
+            <span className="text-gradient-orange">Dominate.</span>
           </h1>
 
           <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base leading-relaxed mb-10 font-mono">
@@ -67,13 +78,20 @@ const Index = () => {
           </p>
 
           <div className="flex items-center justify-center gap-3">
-            <Button variant="neon" size="lg" onClick={() => navigate("/dashboard/validate")} className="text-sm px-8 h-11">
+            <button
+              onClick={() => navigate("/dashboard/validate")}
+              className="inline-flex items-center gap-2 px-8 h-11 rounded-lg text-sm font-semibold text-primary-foreground transition-all"
+              style={{ background: "hsl(var(--primary))", boxShadow: "0 0 24px hsla(16,100%,50%,0.3)" }}
+            >
               <Zap className="w-4 h-4" />
               Start Validating
-            </Button>
-            <Button variant="ghost" size="lg" onClick={() => navigate("/dashboard")} className="text-sm text-muted-foreground h-11">
+            </button>
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="inline-flex items-center gap-2 px-6 h-11 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
               View Dashboard <ArrowRight className="w-3.5 h-3.5" />
-            </Button>
+            </button>
           </div>
         </motion.div>
 
@@ -85,10 +103,11 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + i * 0.1 }}
-              whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
-              className="bento-card rounded-xl p-5 cursor-default"
+              className="bento-cell rounded-[14px] p-5"
             >
-              <div className="w-8 h-8 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center mb-3">
+              <div className="w-8 h-8 rounded-md flex items-center justify-center mb-3"
+                style={{ background: "hsl(var(--orange-dim))", border: "1px solid hsl(16 100% 50% / 0.2)" }}
+              >
                 <Icon className="w-4 h-4 text-primary" />
               </div>
               <h3 className="text-xs font-bold mb-1.5">{title}</h3>
@@ -110,9 +129,9 @@ const Index = () => {
             { label: "Validation Passes", value: "3+1" },
             { label: "Max Models", value: "6" },
           ].map((s) => (
-            <div key={s.label} className="bento-card rounded-xl p-5 text-center">
-              <p className="text-4xl font-black font-mono tracking-brutal neon-text">{s.value}</p>
-              <p className="text-[9px] text-muted-foreground mt-2 uppercase tracking-[0.15em] font-mono">{s.label}</p>
+            <div key={s.label} className="bento-cell rounded-[14px] p-5 text-center">
+              <p className="font-display text-4xl font-extrabold tracking-tight-custom orange-text">{s.value}</p>
+              <p className="text-[9px] text-muted-foreground mt-2 uppercase tracking-[0.12em] font-mono">{s.label}</p>
             </div>
           ))}
         </motion.div>
